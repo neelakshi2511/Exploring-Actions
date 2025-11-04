@@ -1,0 +1,29 @@
+name: My first GitHub Actions              #just a label
+
+on: [push]                                 #the event that triggers this workflow
+
+jobs: 
+  build:                                   #this is a job called build
+     runs-on: ubuntu-latest                #machine that it will run on
+     strategy:                             #this will allow to run the job multiple times, once for both versions. 
+       matrix:                             #matrix strategy
+          python-version: [3.8 , 3.9]      
+     steps:                                #multiple steps that will run
+     - uses: actions/checkout@v3           #checks repo code(there are many plugins like this)
+     - name: Set up Python                 #sets up python env(from the matrix) in the runner env
+       uses: actions/setup-python@v2       #v2 is version 2 of plugin and not python
+       with:
+         python-version: ${{matrix.python-version}}
+     - name: Install dependencies          #to upgrade pip and install pytest
+       run: |
+         python -m pip install --upgrade pip
+         pip install pytest 
+     - name: Run tests                     #main step
+       run: | 
+          cd src                           #cd into the src directory
+          python -m pytest addition.py     #test addition.py using pytest 
+
+
+
+
+     
